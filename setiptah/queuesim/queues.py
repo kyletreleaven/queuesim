@@ -2,8 +2,42 @@
 # simulation interface is implicit;
 from setiptah.eventsim.signaling import Signal, Message
 
+class token : pass
+
 
 class GatedQueue :
+    def __init__(self) :
+        self._queue = []
+        self._pending = []
+        
+        self.output = Signal()
+        
+    def join_sim(self, sim ) :
+        self.sim = sim
+        
+    """ slot """
+    def arrival(self, arrival ) :
+        self._queue.append( arrival )
+        self._try_release()
+        
+    def requestRelease(self) :
+        self._pending.append( token() )
+        self._try_release()
+        
+    def _try_release(self) :
+        if len( self._queue ) <= 0 or len( self._pending ) <= 0 : return
+        # otherwise, we have an annihilation
+        
+        self._pending.pop(0)        # burn a token
+        msg = Message( self.output, self._queue )
+        self.sim.schedule( msg )
+        
+        self._queue = []
+
+
+
+
+class MultiGatedQueue :
     def __init__(self) :
         self.demands = []
         self.pending = []
