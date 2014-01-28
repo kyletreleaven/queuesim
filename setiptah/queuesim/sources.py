@@ -6,7 +6,6 @@ from setiptah.eventsim.signaling import Signal, Message
 
 
 class PoissonClock(object) :
-    
     def __init__(self, rate=1. ) :
         self.rate = rate
         self._output = Signal()
@@ -25,6 +24,25 @@ class PoissonClock(object) :
         
     def source(self) :
         return self._output
+    
+    
+    
+    
+class UniformClock(object) :
+    def __init__(self, T=1. ) :
+        self.T = T
+        self.output = Signal()
+        
+    def join_sim(self, sim ) :
+        self.sim = sim
+        self.sim.schedule( self.tick )
+        
+    """ auto slot """
+    def tick(self) :
+        self.output()
+        self.sim.schedule( self.tick, self.T )
+        
+        
     
     
     
