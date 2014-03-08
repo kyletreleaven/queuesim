@@ -31,7 +31,7 @@ class PoissonClock(object) :
 class UniformClock(object) :
     def __init__(self, T=1. ) :
         self.T = T
-        self.output = Signal()
+        self._output = Signal()
         
     def join_sim(self, sim ) :
         self.sim = sim
@@ -39,9 +39,11 @@ class UniformClock(object) :
         
     """ auto slot """
     def tick(self) :
-        self.output()
+        self._output()
         self.sim.schedule( self.tick, self.T )
         
+    def source(self) :
+        return self._output
         
     
     

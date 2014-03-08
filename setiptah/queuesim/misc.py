@@ -9,8 +9,9 @@ class Dispatch :
         raise NotImplementedError('implement join_sim')
         
     class Interface :
-        def __init__(self, dispatch ) :
-            self.dispatch = dispatch
+        """ a dispatcher-agent interface; do no instantiate directly """
+        def __init__(self, parent ) :
+            self.dispatch = parent
             
             """ signal """
             self.output = Signal()
